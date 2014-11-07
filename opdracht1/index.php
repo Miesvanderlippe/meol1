@@ -7,14 +7,22 @@ class Weatherunderground{
 	protected $apiurl = "http://api.wunderground.com/api/";
 	
 	/* Variables */
-	public $rawJSON;
+	public $ConditionsRawJSON;
+	public $GeoLookupsRawJSON;
 	
 	public function __construct($country ='France', $city='Paris'){
-	
+		
+		/* Conditions */
+		$requestURL = $this->apiurl . $this->apikey . '/conditions/q/' . $country . '/' . $city . '.json';
+		$data = $this->CurlGet($requestURL);
+		
+		$this->ConditionsRawJSON = $data;
+		
+		/* Geolookup*/
 		$requestURL = $this->apiurl . $this->apikey . '/geolookup/q/' . $country . '/' . $city . '.json';
 		$data = $this->CurlGet($requestURL);
 		
-		$this->rawJSON = $data;
+		$this->GeoLookupsRawJSON = $data;
 	}
 	
 	private function CurlGet($url){
@@ -33,11 +41,19 @@ class Weatherunderground{
 	}
 	
 	public function GetGPSLocation(){
-	
+		
+		$data = $this->GeoLookupsRawJSON;
+		$data = json_decode($data);
+		
+		$lon = $data->{'location'}->{'lon'};
+		$lat = $data->{'location'}->{'lat'};
+		
+		return ($lat . ', ' . $lon);
 	}
 }
 
 $api = new Weatherunderground();
+$api->GetGPSLocation();
 
 ?>
 <html>
@@ -46,6 +62,5 @@ $api = new Weatherunderground();
 	</head>
 	
 	<body>
-		<?=var_dump(json_decode($api->rawJSON))?>
 	</body>
 </html>

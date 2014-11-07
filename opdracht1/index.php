@@ -50,17 +50,58 @@ class Weatherunderground{
 		
 		return ($lat . ', ' . $lon);
 	}
+	
+	public function NearbyStations($radius = 100, $type = 'both'){
+		
+		$data = $this->GeoLookupsRawJSON;
+		$data = json_decode($data, true);
+		
+		/* Split data to airports and stations */
+		$airports = $data['location']['nearby_weather_stations']['airport']['station'];
+		$stations = $data['location']['nearby_weather_stations']['pws']['station'];
+		
+		/* Strip stations that are too far away from city*/
+		foreach($stations as $station=>$value)
+			if($value['distance_km'] > $radius)
+				unset($stations[$station]);
+		
+		/* Reset array keys*/
+		$stations = array_values($stations);
+		
+		/* Split response in one array*/
+		$response['airports'] = $airports;
+		$response['stations'] = $stations;
+		
+		/* Return just one type if user requests it*/
+		switch(strtolower($type)){
+			case 'both':
+				return($response);
+				break;
+			case 'stations':
+				return($response['stations']);
+				break;
+			case 'airports':
+				return($response['airports']);
+				break;
+			default :
+				return($response);
+		}
+	}
 }
 
-$api = new Weatherunderground();
-$api->GetGPSLocation();
+$api			 = new Weatherunderground();
+
+$coordinates	 = $api->GetGPSLocation();
+$stations		 = $api->NearbyStations(1);
 
 ?>
 <html>
 	<head>
 		<title>MEOL1 - Opdracht 1</title>
 	</head>
-	
 	<body>
+		<?php
+			print_r($stations);
+		?>
 	</body>
 </html>

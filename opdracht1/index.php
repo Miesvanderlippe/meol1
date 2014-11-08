@@ -78,6 +78,31 @@ class Weatherunderground{
 		return $windspeed;
 	}
 
+	public function GetWindDirection($type = 'degrees'){
+
+		if(!$this->status){
+			trigger_error("API response is empty, can't get temperature", E_USER_WARNING);
+			return Null;
+		}
+
+		$data = $this->ConditionsRawJSON;
+		$data = json_decode($data, true);
+
+		switch(strtolower($type)){
+
+			case 'degrees' :
+				$direction = $data['current_observation']['wind_degrees'];
+				break;
+			case 'direction' :
+				$direction = $data['current_observation']['wind_dir'];
+				break;
+			default :
+				$direction = $data['current_observation']['wind_degrees'];
+		}
+
+		return $direction;
+	}
+
 	public function GetTemperature($unit = 'c'){
 
 		if(!$this->status){
@@ -198,6 +223,8 @@ if($api->status){
 	$GtemperatuurF	 = $api->GetPerceivedTemperature('f');
 	$windspeedK		 = $api->GetWindspeed('kmh');
 	$windspeedM		 = $api->GetWindspeed('mph');
+	$windrichtingD	 = $api->GetWindDirection('degrees');
+	$windrichtingC	 = $api->GetWindDirection('direction');
 }
 
 ?>
@@ -212,8 +239,8 @@ if($api->status){
 
 				//print_r(json_decode($api->ConditionsRawJSON));
 
-				print( 'Windsnelheid (kmu) : ' . $windspeedK . '<br/>' );
-				print( 'Windsnelheid (mph) : ' . $windspeedM . '<br/>' );
+				print( 'Windrichting in graden : ' . $windrichtingD . '<br/>' );
+				print( 'Windrichting als op het compas : ' . $windrichtingC . '<br/>' );
 			}else{
 
 				print("Can't find requested city or country");

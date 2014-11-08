@@ -77,6 +77,31 @@ class Weatherunderground{
 	}
 
 	/*
+		Description :
+			Gets the URL for an icon describing the weather from saved data
+
+		Parameters : 
+			None
+
+		Return value :
+			URL (str) - full HTTP link to icon
+	*/
+	public function GetIconURL(){
+
+		if(!$this->status){
+			trigger_error("API response is empty, can't get temperature", E_USER_WARNING);
+			return Null;
+		}
+
+		$data = $this->ConditionsRawJSON;
+		$data = json_decode($data, true);
+
+		$iconURL = $data['current_observation']['icon_url'];
+
+		return $iconURL;
+	}
+
+	/*
 		Description : 
 			Gets wind speed from saved data. 
 		
@@ -328,11 +353,12 @@ if($api->status){
 		<title>MEOL1 - Opdracht 1</title>
 	</head>
 	<body>
+		<img alt='Current Weather' src='<?=$api->GetIconURL() ?>'/>
 		<?php
 		
 			if($api->status){
 
-				//print_r(json_decode($api->ConditionsRawJSON));
+				print_r(json_decode($api->ConditionsRawJSON));
 
 				print( 'Windrichting in graden : ' . $windrichtingD . '<br/>' );
 				print( 'Windrichting als op het compas : ' . $windrichtingC . '<br/>' );

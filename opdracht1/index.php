@@ -10,8 +10,8 @@ class Weatherunderground{
 	public $ConditionsRawJSON;
 	public $GeoLookupsRawJSON;
 	public $status;
-	private $country;
-	private $city;
+	public $country;
+	public $city;
 
 	/*
 		Description : 
@@ -130,7 +130,7 @@ class Weatherunderground{
 			return Null;
 		}
 
-		$relayurl = 'opdracht1/imagerelay.php?url=';
+		$relayurl = 'imagerelay.php?url=';
 
 		if($animated)
 			$imageURL		 = $relayurl . urlencode('/animatedsatellite/q/' . urlencode($this->country) . '/' . urlencode($this->city) . '.gif?basemap=1&width=' . $width . '&height=' . $height);
@@ -384,38 +384,51 @@ class Weatherunderground{
 
 $api			 = new Weatherunderground('Netherlands', 'Amsterdam');
 
-if($api->status){
-
-	$coordinates	 = $api->GetGPSLocation();
-	$stations		 = $api->NearbyStations(1);
-	$temperatuurC 	 = $api->GetTemperature('c');
-	$temperatuurF	 = $api->GetTemperature('f');
-	$GtemperatuurC 	 = $api->GetPerceivedTemperature('c');
-	$GtemperatuurF	 = $api->GetPerceivedTemperature('f');
-	$windspeedK		 = $api->GetWindspeed('kmh');
-	$windspeedM		 = $api->GetWindspeed('mph');
-	$windrichtingD	 = $api->GetWindDirection('degrees');
-	$windrichtingC	 = $api->GetWindDirection('direction');
-
-	$gpsfoto = $api->GetSateliteImageURL();
-}
-
 ?>
 <html>
 	<head>
 		<title>MEOL1 - Opdracht 1</title>
 	</head>
 	<body>
-		<img alt='Current Weather' src='<?=$api->GetIconURL() ?>'/>
-		<img alt='Current Weather' src='<?=$api->GetSateliteImageURL() ?>'/>
+
 		<?php
-		
 			if($api->status){
+				print("Land : " . $api->country . "<br/>");
+				print("Stad : " . $api->city . "<br/>");
 
-				//print_r(json_decode($api->ConditionsRawJSON));
+				print("Coordinaten : " . $api->GetGPSLocation() . "<br/>");
 
-				print( 'Windrichting in graden : ' . $windrichtingD . '<br/>' );
-				print( 'Windrichting als op het compas : ' . $windrichtingC . '<br/>' );
+				print("Temperatuur in graden Celcius : " . $api->GetTemperature('c') . "<br/>");
+				print("Temperatuur in graden Fahrenheit : " . $api->GetTemperature('f') . "<br/>");
+
+				print("Gevoelsemperatuur in graden Celcius : " . $api->GetPerceivedTemperature('c') . "<br/>");
+				print("Gevoelsemperatuur in graden Fahrenheit : " . $api->GetPerceivedTemperature('f') . "<br/>");
+
+
+				print('Windrichting in graden : ' . $api->GetWindDirection('degrees') . '<br/>' );
+				print('Windrichting als op het compas : ' . $api->GetWindDirection('direction') . '<br/>');
+
+				print('Windsnelheid in km/u : ' . $api->GetWindspeed('kmh') . '<br/>' );
+				print('Windsnelheid in mp/h: ' . $api->GetWindspeed('mph') . '<br/>' );
+
+				print("<img alt='Current Weather' src='" . $api->GetIconURL() . "'/>");
+				print("<img alt='Current Weather' src='" . $api->GetSateliteImageURL() . "'/>");
+
+				print("<b>Weerstations in een radius van 5 KM van de gegeven stad</b><br/>");
+
+				$weathersources = $api->NearbyStations(5);
+
+				print("<br/><b>Vliegvelden</b><br/>");
+				foreach($weathersources['airports'] as $airport)
+					foreach($airport as $key=>$val)
+						print($key . ' : '. $val . "<br/>");
+
+
+				print("<br/><b>Weerstations</b><br/>");
+				foreach($weathersources['stations'] as $station)
+					foreach($station as $key=>$val)
+						print($key . ' : '. $val . "<br/>");
+
 			}else{
 
 				print("Can't find requested city or country");

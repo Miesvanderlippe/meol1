@@ -13,13 +13,15 @@ class Weatherunderground{
 	public function __construct($country ='France', $city='Paris'){
 		
 		/* Conditions */
-		$requestURL = $this->apiurl . $this->apikey . '/conditions/q/' . $country . '/' . $city . '.json';
+		$requestURL = $this->apiurl . $this->apikey . '/conditions/q/' . urlencode($country) . '/' . urlencode($city) . '.json';
 		$data = $this->CurlGet($requestURL);
-		
+
+		print($requestURL);
+
 		$this->ConditionsRawJSON = $data;
 		
 		/* Geolookup*/
-		$requestURL = $this->apiurl . $this->apikey . '/geolookup/q/' . $country . '/' . $city . '.json';
+		$requestURL = $this->apiurl . $this->apikey . '/geolookup/q/' . urlencode($country) . '/' . urlencode($city) . '.json';
 		$data = $this->CurlGet($requestURL);
 		
 		$this->GeoLookupsRawJSON = $data;
@@ -127,7 +129,7 @@ class Weatherunderground{
 	}
 }
 
-$api			 = new Weatherunderground();
+$api			 = new Weatherunderground('Netherlands', 'Amsterdam');
 
 $coordinates	 = $api->GetGPSLocation();
 $stations		 = $api->NearbyStations(1);
@@ -143,8 +145,8 @@ $GtemperatuurF	 = $api->GetPerceivedTemperature('f');
 	</head>
 	<body>
 		<?php
-			print( 'Gevoelstemperatuur' . $GtemperatuurC . '<br/>' );
-			print( 'Temperatuur' . $GtemperatuurC . '<br/>' );
+			print( 'Gevoelstemperatuur : ' . $GtemperatuurC . '<br/>' );
+			print( 'Temperatuur : ' . $GtemperatuurC . '<br/>' );
 		?>
 	</body>
 </html>

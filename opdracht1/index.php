@@ -111,7 +111,9 @@ class Weatherunderground{
 		Description : 
 			Gets satelite image url of saved area.
 			You can get both a .gif (animated clouds) or a .png (static image).
-			!!! WATCH OUT : REVEALS API KEYS !!!
+			!!! WATCH OUT : REVEALS API KEYS IF USED INCORRECTLY!!!
+			Use in combination with image relay server, proof of concept can be found here : 
+			https://github.com/Miesvanderlippe/meol1/blob/master/opdracht1/imagerelay.php
 
 		Parameters :
 			width (int) - image width (default = 300)
@@ -127,11 +129,13 @@ class Weatherunderground{
 			trigger_error("API response is empty, can't get satelite image", E_USER_WARNING);
 			return Null;
 		}
-		
+
+		$relayurl = 'opdracht1/imagerelay.php?url=';
+
 		if($animated)
-			$imageURL		 = $this->apiurl . $this->apikey . '/animatedsatellite/q/' . urlencode($this->country) . '/' . urlencode($this->city) . '.gif?basemap=1&width=' . $width . '&height=' . $height;
+			$imageURL		 = $relayurl . urlencode('/animatedsatellite/q/' . urlencode($this->country) . '/' . urlencode($this->city) . '.gif?basemap=1&width=' . $width . '&height=' . $height);
 		else
-			$imageURL		 = $this->apiurl . $this->apikey . '/satellite/q/' . urlencode($this->country) . '/' . urlencode($this->city) . '.png?basemap=1&width=' . $width . '&height=' . $height;
+			$imageURL		 = $relayurl . urlencode('/satellite/q/' . urlencode($this->country) . '/' . urlencode($this->city) . '.png?basemap=1&width=' . $width . '&height=' . $height);
 
 		return $imageURL;
 	}
@@ -151,7 +155,7 @@ class Weatherunderground{
 	public function GetWindspeed($unit = 'kmh'){
 
 		if(!$this->status){
-			trigger_error("API response is empty, can't get temperature", E_USER_WARNING);
+			trigger_error("API response is empty, can't get windspeed", E_USER_WARNING);
 			return Null;
 		}
 
@@ -163,9 +167,11 @@ class Weatherunderground{
 			case 'kph' :
 				$windspeed = $data['current_observation']['wind_kph'];
 				break;
+
 			case 'mph' :
 				$windspeed = $data['current_observation']['wind_mph'];
 				break;
+
 			default :
 				$windspeed = $data['current_observation']['wind_kph'];
 		}
@@ -188,7 +194,7 @@ class Weatherunderground{
 	public function GetWindDirection($type = 'degrees'){
 
 		if(!$this->status){
-			trigger_error("API response is empty, can't get temperature", E_USER_WARNING);
+			trigger_error("API response is empty, can't get winddirection", E_USER_WARNING);
 			return Null;
 		}
 
@@ -200,9 +206,11 @@ class Weatherunderground{
 			case 'degrees' :
 				$direction = $data['current_observation']['wind_degrees'];
 				break;
+
 			case 'direction' :
 				$direction = $data['current_observation']['wind_dir'];
 				break;
+
 			default :
 				$direction = $data['current_observation']['wind_degrees'];
 		}
@@ -237,9 +245,11 @@ class Weatherunderground{
 			case 'c':
 				$temperature = $data['current_observation']['temp_c'];
 				break;
+
 			case 'f':
 				$temperature = $data['current_observation']['temp_f'];
 				break;
+
 			default :
 				$temperature = $data['current_observation']['temp_c'];
 		}
@@ -273,9 +283,11 @@ class Weatherunderground{
 			case 'c':
 				$temperature = $data['current_observation']['feelslike_c'];
 				break;
+
 			case 'f':
 				$temperature = $data['current_observation']['feelslike_f'];
 				break;
+
 			default :
 				$temperature = $data['current_observation']['feelslike_c'];
 		}
@@ -296,7 +308,7 @@ class Weatherunderground{
 	public function GetGPSLocation(){
 
 		if(!$this->status){
-			trigger_error("API response is empty, can't get temperature", E_USER_WARNING);
+			trigger_error("API response is empty, can't get location", E_USER_WARNING);
 			return Null;
 		}
 		
@@ -326,7 +338,7 @@ class Weatherunderground{
 	public function NearbyStations($radius = 100, $type = 'both'){
 
 		if(!$this->status){
-			trigger_error("API response is empty, can't get temperature", E_USER_WARNING);
+			trigger_error("API response is empty, can't get nearby stations", E_USER_WARNING);
 			return Null;
 		}
 		
@@ -351,15 +363,19 @@ class Weatherunderground{
 		
 		/* Return just one type if user requests it*/
 		switch(strtolower($type)){
+
 			case 'both':
 				return($response);
 				break;
+
 			case 'stations':
 				return($response['stations']);
 				break;
+
 			case 'airports':
 				return($response['airports']);
 				break;
+
 			default :
 				return($response);
 		}

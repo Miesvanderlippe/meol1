@@ -10,6 +10,8 @@ class Weatherunderground{
 	public $ConditionsRawJSON;
 	public $GeoLookupsRawJSON;
 	public $status;
+	private $country;
+	private $city;
 
 	/*
 		Description : 
@@ -25,6 +27,10 @@ class Weatherunderground{
 	*/	
 	public function __construct($country ='France', $city='Paris'){
 		
+		/* Save city and country*/
+		$this->country 	 = $country;
+		$this->city 	 = $city;
+
 		/* Conditions */
 		$requestURL		 = $this->apiurl . $this->apikey . '/conditions/q/' . urlencode($country) . '/' . urlencode($city) . '.json';
 		$data			 = $this->CurlGet($requestURL);
@@ -89,7 +95,7 @@ class Weatherunderground{
 	public function GetIconURL(){
 
 		if(!$this->status){
-			trigger_error("API response is empty, can't get temperature", E_USER_WARNING);
+			trigger_error("API response is empty, can't get icon", E_USER_WARNING);
 			return Null;
 		}
 
@@ -99,6 +105,35 @@ class Weatherunderground{
 		$iconURL = $data['current_observation']['icon_url'];
 
 		return $iconURL;
+	}
+
+	/*
+		Description : 
+			Gets satelite image url of saved area.
+			You can get both a .gif (animated clouds) or a .png (static image).
+			!!! WATCH OUT : REVEALS API KEYS !!!
+
+		Parameters :
+			width (int) - image width (default = 300)
+			height (int) - image height (default = 300)
+			animated (bool) - wether image is animated or not (default = false)
+		
+		Return value :
+			URL (str) - URL to image.
+	*/
+	public function GetSateliteImageURL($width = 300, $height = 300, $animated = false){
+
+		if(!$this->status){
+			trigger_error("API response is empty, can't get satelite image", E_USER_WARNING);
+			return Null;
+		}
+		
+		if($animated)
+			$imageURL		 = $this->apiurl . $this->apikey . '/animatedsatellite/q/' . urlencode($this->country) . '/' . urlencode($this->city) . '.gif?basemap=1&width=' . $width . '&height=' . $height;
+		else
+			$imageURL		 = $this->apiurl . $this->apikey . '/satellite/q/' . urlencode($this->country) . '/' . urlencode($this->city) . '.png?basemap=1&width=' . $width . '&height=' . $height;
+
+		return $imageURL;
 	}
 
 	/*
@@ -345,6 +380,8 @@ if($api->status){
 	$windspeedM		 = $api->GetWindspeed('mph');
 	$windrichtingD	 = $api->GetWindDirection('degrees');
 	$windrichtingC	 = $api->GetWindDirection('direction');
+
+	$gpsfoto = $api->GetSateliteImageURL();
 }
 
 ?>
@@ -354,11 +391,12 @@ if($api->status){
 	</head>
 	<body>
 		<img alt='Current Weather' src='<?=$api->GetIconURL() ?>'/>
+		<img alt='Current Weather' src='<?=$api->GetSateliteImageURL() ?>'/>
 		<?php
 		
 			if($api->status){
 
-				print_r(json_decode($api->ConditionsRawJSON));
+				//print_r(json_decode($api->ConditionsRawJSON));
 
 				print( 'Windrichting in graden : ' . $windrichtingD . '<br/>' );
 				print( 'Windrichting als op het compas : ' . $windrichtingC . '<br/>' );

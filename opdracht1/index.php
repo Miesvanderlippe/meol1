@@ -9,14 +9,13 @@ class Weatherunderground{
 	/* Variables */
 	public $ConditionsRawJSON;
 	public $GeoLookupsRawJSON;
+	public $status;
 	
 	public function __construct($country ='France', $city='Paris'){
 		
 		/* Conditions */
 		$requestURL = $this->apiurl . $this->apikey . '/conditions/q/' . urlencode($country) . '/' . urlencode($city) . '.json';
 		$data = $this->CurlGet($requestURL);
-
-		print($requestURL);
 
 		$this->ConditionsRawJSON = $data;
 		
@@ -25,6 +24,18 @@ class Weatherunderground{
 		$data = $this->CurlGet($requestURL);
 		
 		$this->GeoLookupsRawJSON = $data;
+
+		/* Request status */
+		$this->status = true;
+
+		$geolookupdata = json_decode($this->GeoLookupsRawJSON, true);
+		$geolookupstatus = (isset($geolookupdata['response']['error']) ? false : true);
+
+		$conditionsdata = json_decode($this->GeoLookupsRawJSON, true);
+		$conditionsstatus = (isset($geolookupdata['response']['error']) ? false : true);
+
+		if(!$conditionsstatus || !$geolookupstatus)
+			$this->status = false;
 	}
 	
 	private function CurlGet($url){
@@ -43,6 +54,11 @@ class Weatherunderground{
 	}
 
 	public function GetTemperature($unit = 'c'){
+
+		if(!$this->status){
+			trigger_error("API response is empty, can't get temperature", E_USER_WARNING);
+			return Null;
+		}
 
 		$data = $this->ConditionsRawJSON;
 		$data = json_decode($data, true);
@@ -63,6 +79,11 @@ class Weatherunderground{
 
 	public function GetPerceivedTemperature($unit = 'c'){
 
+		if(!$this->status){
+			trigger_error("API response is empty, can't get temperature", E_USER_WARNING);
+			return Null;
+		}
+
 		$data = $this->ConditionsRawJSON;
 		$data = json_decode($data, true);
 
@@ -81,6 +102,11 @@ class Weatherunderground{
 	}
 	
 	public function GetGPSLocation(){
+
+		if(!$this->status){
+			trigger_error("API response is empty, can't get temperature", E_USER_WARNING);
+			return Null;
+		}
 		
 		$data = $this->GeoLookupsRawJSON;
 		$data = json_decode($data);
@@ -92,6 +118,11 @@ class Weatherunderground{
 	}
 	
 	public function NearbyStations($radius = 100, $type = 'both'){
+
+		if(!$this->status){
+			trigger_error("API response is empty, can't get temperature", E_USER_WARNING);
+			return Null;
+		}
 		
 		$data = $this->GeoLookupsRawJSON;
 		$data = json_decode($data, true);
@@ -131,12 +162,15 @@ class Weatherunderground{
 
 $api			 = new Weatherunderground('Netherlands', 'Amsterdam');
 
-$coordinates	 = $api->GetGPSLocation();
-$stations		 = $api->NearbyStations(1);
-$temperatuurC 	 = $api->GetTemperature('c');
-$temperatuurF	 = $api->GetTemperature('f');
-$GtemperatuurC 	 = $api->GetPerceivedTemperature('c');
-$GtemperatuurF	 = $api->GetPerceivedTemperature('f');
+if($api->status){
+
+	$coordinates	 = $api->GetGPSLocation();
+	$stations		 = $api->NearbyStations(1);
+	$temperatuurC 	 = $api->GetTemperature('c');
+	$temperatuurF	 = $api->GetTemperature('f');
+	$GtemperatuurC 	 = $api->GetPerceivedTemperature('c');
+	$GtemperatuurF	 = $api->GetPerceivedTemperature('f');
+}
 
 ?>
 <html>
@@ -145,8 +179,16 @@ $GtemperatuurF	 = $api->GetPerceivedTemperature('f');
 	</head>
 	<body>
 		<?php
-			print( 'Gevoelstemperatuur : ' . $GtemperatuurC . '<br/>' );
-			print( 'Temperatuur : ' . $GtemperatuurC . '<br/>' );
+		
+			if($api->status){
+
+				print( 'Gevoelstemperatuur : ' . $GtemperatuurC . '<br/>' );
+				print( 'Temperatuur : ' . $GtemperatuurC . '<br/>' );
+			}else{
+				
+				print("Can't find requested city or country");
+			}
+		
 		?>
 	</body>
 </html>

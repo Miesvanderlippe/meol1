@@ -53,6 +53,31 @@ class Weatherunderground{
 		return($data);
 	}
 
+	public function GetWindspeed($unit = 'kmh'){
+
+		if(!$this->status){
+			trigger_error("API response is empty, can't get temperature", E_USER_WARNING);
+			return Null;
+		}
+
+		$data = $this->ConditionsRawJSON;
+		$data = json_decode($data, true);
+
+		switch(strtolower($unit)){
+
+			case 'kph' :
+				$windspeed = $data['current_observation']['wind_kph'];
+				break;
+			case 'mph' :
+				$windspeed = $data['current_observation']['wind_mph'];
+				break;
+			default :
+				$windspeed = $data['current_observation']['wind_kph'];
+		}
+
+		return $windspeed;
+	}
+
 	public function GetTemperature($unit = 'c'){
 
 		if(!$this->status){
@@ -64,6 +89,7 @@ class Weatherunderground{
 		$data = json_decode($data, true);
 
 		switch(strtolower($unit)){
+			
 			case 'c':
 				$temperature = $data['current_observation']['temp_c'];
 				break;
@@ -170,6 +196,8 @@ if($api->status){
 	$temperatuurF	 = $api->GetTemperature('f');
 	$GtemperatuurC 	 = $api->GetPerceivedTemperature('c');
 	$GtemperatuurF	 = $api->GetPerceivedTemperature('f');
+	$windspeedK		 = $api->GetWindspeed('kmh');
+	$windspeedM		 = $api->GetWindspeed('mph');
 }
 
 ?>
@@ -182,10 +210,12 @@ if($api->status){
 		
 			if($api->status){
 
-				print( 'Gevoelstemperatuur : ' . $GtemperatuurC . '<br/>' );
-				print( 'Temperatuur : ' . $GtemperatuurC . '<br/>' );
+				//print_r(json_decode($api->ConditionsRawJSON));
+
+				print( 'Windsnelheid (kmu) : ' . $windspeedK . '<br/>' );
+				print( 'Windsnelheid (mph) : ' . $windspeedM . '<br/>' );
 			}else{
-				
+
 				print("Can't find requested city or country");
 			}
 		

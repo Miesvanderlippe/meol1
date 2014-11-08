@@ -39,6 +39,44 @@ class Weatherunderground{
 		
 		return($data);
 	}
+
+	public function GetTemperature($unit = 'c'){
+
+		$data = $this->ConditionsRawJSON;
+		$data = json_decode($data, true);
+
+		switch(strtolower($unit)){
+			case 'c':
+				$temperature = $data['current_observation']['temp_c'];
+				break;
+			case 'f':
+				$temperature = $data['current_observation']['temp_f'];
+				break;
+			default :
+				$temperature = $data['current_observation']['temp_c'];
+		}
+
+		return $temperature;
+	}
+
+	public function GetPerceivedTemperature($unit = 'c'){
+
+		$data = $this->ConditionsRawJSON;
+		$data = json_decode($data, true);
+
+		switch(strtolower($unit)){
+			case 'c':
+				$temperature = $data['current_observation']['feelslike_c'];
+				break;
+			case 'f':
+				$temperature = $data['current_observation']['feelslike_f'];
+				break;
+			default :
+				$temperature = $data['current_observation']['feelslike_c'];
+		}
+
+		return $temperature;
+	}
 	
 	public function GetGPSLocation(){
 		
@@ -93,6 +131,10 @@ $api			 = new Weatherunderground();
 
 $coordinates	 = $api->GetGPSLocation();
 $stations		 = $api->NearbyStations(1);
+$temperatuurC 	 = $api->GetTemperature('c');
+$temperatuurF	 = $api->GetTemperature('f');
+$GtemperatuurC 	 = $api->GetPerceivedTemperature('c');
+$GtemperatuurF	 = $api->GetPerceivedTemperature('f');
 
 ?>
 <html>
@@ -101,7 +143,8 @@ $stations		 = $api->NearbyStations(1);
 	</head>
 	<body>
 		<?php
-			print_r($stations);
+			print( 'Gevoelstemperatuur' . $GtemperatuurC . '<br/>' );
+			print( 'Temperatuur' . $GtemperatuurC . '<br/>' );
 		?>
 	</body>
 </html>

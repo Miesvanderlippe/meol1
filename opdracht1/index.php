@@ -12,6 +12,7 @@ class Weatherunderground{
 	public $status;
 	public $country;
 	public $city;
+	public $language = 'NL';
 
 	/*
 		Description : 
@@ -32,15 +33,15 @@ class Weatherunderground{
 		$this->city 	 = $city;
 
 		/* Conditions */
-		$requestURL		 = $this->apiurl . $this->apikey . '/conditions/q/' . urlencode($country) . '/' . urlencode($city) . '.json';
+		$requestURL		 = $this->apiurl . $this->apikey . '/conditions/lang:' . $this->language .'/q/' . urlencode($country) . '/' . urlencode($city) . '.json';
 		$data			 = $this->CurlGet($requestURL);
 
 		$this->ConditionsRawJSON = $data;
 		
 		/* Geolookup*/
-		$requestURL		 = $this->apiurl . $this->apikey . '/geolookup/q/' . urlencode($country) . '/' . urlencode($city) . '.json';
+		$requestURL		 = $this->apiurl . $this->apikey . '/geolookup/lang:' . $this->language .'/q/' . urlencode($country) . '/' . urlencode($city) . '.json';
 		$data			 = $this->CurlGet($requestURL);
-		
+
 		$this->GeoLookupsRawJSON = $data;
 
 		/* Request status */

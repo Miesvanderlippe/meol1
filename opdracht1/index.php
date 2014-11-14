@@ -420,15 +420,28 @@ $api			 = new Weatherunderground('Netherlands', 'Amsterdam');
 				$weathersources = $api->NearbyStations(5);
 
 				print("<br/><b>Vliegvelden</b><br/>");
-				foreach($weathersources['airports'] as $airport)
-					foreach($airport as $key=>$val)
-						print($key . ' : '. $val . "<br/>");
+				foreach($weathersources['airports'] as $airport){
+
+					print('land : ' . $airport['country'] . '<br/>');
+					print('stad : ' . $airport['city'] . '<br/>');
+					print('longtitude : ' . $airport['lon'] . '<br/>');
+					print('latitude : ' . $airport['lat'] . '<br/>');
+
+					print('<br/>');
+				}
 
 
 				print("<br/><b>Weerstations</b><br/>");
-				foreach($weathersources['stations'] as $station)
-					foreach($station as $key=>$val)
-						print($key . ' : '. $val . "<br/>");
+				foreach($weathersources['stations'] as $station){
+					
+					print('land : ' . $station['country'] . '<br/>');
+					print('stad : ' . $station['city'] . '<br/>');
+					print('wijk : ' . $station['neighborhood'] . '<br/>');
+					print('longtitude : ' . $station['lon'] . '<br/>');
+					print('latitude : ' . $station['lat'] . '<br/>');
+					
+					print('<br/>');
+				}
 
 			}else{
 

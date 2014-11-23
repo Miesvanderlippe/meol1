@@ -23,16 +23,36 @@ class DB extends PDO {
 
 		parent::__construct('mysql:host='. $this->dbserver . ';dbname=' . $this->dbname . ';port=' . $this->dbport, $this->dbuser, $this->dbpw, $options);
 	}
+
+	public function GetAllAnimals(){
+
+		$query = 'SELECT `id`, `naam` FROM `meol1_dieren`';
+
+        $reponse = parent::prepare($query);
+        $reponse->execute();
+        $result	 = $reponse->fetchAll(PDO::FETCH_ASSOC);
+
+        return $result;
+	}
+
+	public function GetAnimal($query){
+
+
+	}
 }
 
-$db = new DB();
+
 
 \Slim\Slim::registerAutoloader();
 
 $slim = new \Slim\Slim();
 
 $slim->get('/dieren', function(){
-	print(json_encode('dieren'));
+
+	$db 	 = new DB();
+	$dieren  = $db->GetAllAnimals();
+	
+	print(json_encode($dieren));
 });
 
 $slim->get('/dieren/:id', function($id){

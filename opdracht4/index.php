@@ -35,9 +35,21 @@ class DB extends PDO {
         return $result;
 	}
 
-	public function GetAnimal($query){
+	public function GetAnimal($where){
 
+		$query = 'SELECT `id`, `naam` FROM `meol1_dieren` ';
 
+		//Quickhand if decides wether to filter on name or id based on if the input is numeric. 
+		//Have an animal with a numeric name? Too bad. You could solve this if it weren't for a school excercise.
+		$whereCondition = 'WHERE ' . (is_numeric($where) ? 'id=\''.$where.'\'' : 'naam=\''.$where.'\'');
+
+		$query = $query . $whereCondition . ' LIMIT 1';
+
+		$reponse = parent::prepare($query);
+        $reponse->execute();
+        $result	 = $reponse->fetchAll(PDO::FETCH_ASSOC);
+
+        return $result;
 	}
 }
 
@@ -56,7 +68,11 @@ $slim->get('/dieren', function(){
 });
 
 $slim->get('/dieren/:id', function($id){
-	print(json_encode($id));
+	
+	$db 	 = new DB();
+	$dieren  = $db->GetAnimal($id);
+	
+	print(json_encode($dieren));
 });
 
 $slim->run();

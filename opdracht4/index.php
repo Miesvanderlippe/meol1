@@ -35,6 +35,17 @@ class DB extends PDO {
         return $result;
 	}
 
+	public function GetAllOwners(){
+
+		$query = 'SELECT `id`, `voornaam`,`tussenvoegsel`,`achternaam`,`plaats` FROM `meol1_eigenaars`';
+
+        $reponse = parent::prepare($query);
+        $reponse->execute();
+        $result	 = $reponse->fetchAll(PDO::FETCH_ASSOC);
+
+        return $result;
+	}
+
 	public function GetAnimal($where){
 
 		$query = 'SELECT * FROM `meol1_dieren` ';
@@ -106,6 +117,14 @@ $slim->get('/dieren/:id/eigenaar', function($id){
 	$dieren  = $db->GetOwnerByPet($id);
 	
 	print(json_encode($dieren));
+});
+
+$slim->get('/eigenaars', function(){
+	
+	$db 		 = new DB();
+	$eigenaars 	 = $db->GetAllOwners();
+	
+	print(json_encode($eigenaars));
 });
 
 $slim->run();

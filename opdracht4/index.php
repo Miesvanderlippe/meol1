@@ -48,7 +48,7 @@ class DB extends PDO {
 
 	public function GetAnimal($where){
 
-		$query = 'SELECT * FROM `meol1_dieren` ';
+		$query = 'SELECT `naam`,`soort`,`geboortejaar`,`eigenaar_id` FROM `meol1_dieren` ';
 
 		//Quickhand if decides wether to filter on name or id based on if the input is numeric. 
 		//Have an animal with a numeric name? Too bad. You could solve this if it weren't for a school excercise.

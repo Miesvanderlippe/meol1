@@ -67,6 +67,27 @@ class DB extends PDO {
         return $result;
 	}
 
+	public function GetOwner($where){
+
+		$query = 'SELECT `id`, `voornaam`,`tussenvoegsel`,`achternaam`,`plaats` FROM `meol1_eigenaars`';
+
+		//Quickhand if decides wether to filter on name or id based on if the input is numeric. 
+		//Have an owner with a numeric name? Too bad. You could solve this if it weren't for a school excercise.
+		$whereCondition = 'WHERE ' . (is_numeric($where) ? 'id=UNHEX(:where)' : 'naam=UNHEX(:where)');
+
+		$query = $query . $whereCondition . ' LIMIT 1';
+
+		$reponse = parent::prepare($query);
+		$where = bin2hex($where);
+
+		$reponse->bindParam(':where', $where);
+
+        $reponse->execute();
+        $result	 = $reponse->fetchAll(PDO::FETCH_ASSOC);
+
+        return $result;
+	}
+
 	public function GetOwnerByPet($where){
 
 		$query = 'SELECT `eigenaar_id` FROM `meol1_dieren` ';
@@ -125,6 +146,14 @@ $slim->get('/eigenaars', function(){
 	$eigenaars 	 = $db->GetAllOwners();
 	
 	print(json_encode($eigenaars));
+});
+
+$slim->get('/eigenaars/:id', function($id){
+	
+	$db 		 = new DB();
+	$eigenaar 	 = $db->GetOwner($id);
+	
+	print(json_encode($eigenaar));
 });
 
 $slim->run();

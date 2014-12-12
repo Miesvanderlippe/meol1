@@ -145,6 +145,23 @@ class DB extends PDO {
 
         return $result;
 	}
+
+	public function AddOwner($firstName, $affix, $lastName, $city){
+
+		$query = 	'INSERT INTO `meol1_eigenaars`(naam, soort, geboortejaar, eigenaar_id)
+					 VALUES (?, ?, ?, ?)';
+
+		$reponse = parent::prepare($query);
+
+		$response->bind(1, $firstName));
+        $response->bind(2, $affix));
+        $response->bind(3, $lastName));
+        $response->bind(4, $city);
+
+        $result	 = $response->execute();
+
+        return $result;
+	}
 }
 
 
@@ -197,6 +214,19 @@ $slim->get('/eigenaars', function()
 	$eigenaars 	 = $db->GetAllOwners();
 	
 	print(json_encode($eigenaars));
+});
+
+$slim->post('/owners', function()
+	use($slim, $db){
+		
+		$firstName	 = $app->request()->post('firstName');
+        $affix		 = $app->request()->post('affix');
+        $lastName	 = $app->request()->post('lastName');
+        $city		 = $app->request()->post('city');
+
+		$result		 = $db->AddOwner($firstName, $affix, $lastName, $city);
+
+		print(json_encode(array('result'=>$result)));
 });
 
 $slim->get('/eigenaars/:id', function($id)

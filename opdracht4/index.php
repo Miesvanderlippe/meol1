@@ -134,51 +134,52 @@ class DB extends PDO {
 
 \Slim\Slim::registerAutoloader();
 
-$slim = new \Slim\Slim();
+$slim 	 = new \Slim\Slim();
+$db 	 = new DB();
 
-$slim->get('/dieren', function(){
+$slim->get('/dieren', function()
+	use($db){
 
-	$db 		 = new DB();
 	$dieren 	 = $db->GetAllAnimals();
 	
 	print(json_encode($dieren));
 });
 
-$slim->get('/dieren/:id', function($id){
-	
-	$db 		 = new DB();
+$slim->get('/dieren/:id', function($id)
+	use($db){
+
 	$dieren 	 = $db->GetAnimal($id);
 	
 	print(json_encode($dieren));
 });
 
-$slim->get('/dieren/:id/eigenaar', function($id){
-	
-	$db 		 = new DB();
+$slim->get('/dieren/:id/eigenaar', function($id)
+	use($db){
+
 	$dieren 	 = $db->GetOwnerByPet($id);
 	
 	print(json_encode($dieren));
 });
 
-$slim->get('/eigenaars', function(){
-	
-	$db 		 = new DB();
+$slim->get('/eigenaars', function()
+	use($db){
+
 	$eigenaars 	 = $db->GetAllOwners();
 	
 	print(json_encode($eigenaars));
 });
 
-$slim->get('/eigenaars/:id', function($id){
-	
-	$db 		 = new DB();
+$slim->get('/eigenaars/:id', function($id)
+	use($db){
+
 	$eigenaar 	 = $db->GetOwner($id);
 	
 	print(json_encode($eigenaar));
 });
 
-$slim->get('/eigenaars/:id/dieren', function($id){
-	
-	$db 		 = new DB();
+$slim->get('/eigenaars/:id/dieren', function($id)
+	use($db){
+
 	$eigenaar 	 = $db->GetAnimalsByOwner($id);
 	
 	print(json_encode($eigenaar));

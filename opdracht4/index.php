@@ -128,6 +128,23 @@ class DB extends PDO {
 
         return $result;
 	}
+
+	public function AddAnimal($name, $kind, $yearOfBirth, $ownerID){
+
+		$query = 	'INSERT INTO `meol1_dieren`(naam, soort, geboortejaar, eigenaar_id)
+					 VALUES (?, ?, ?, ?)';
+
+		$reponse = parent::prepare($query);
+
+		$response->bind(1, $name));
+        $response->bind(2, $kind));
+        $response->bind(3, $yearOfBirth));
+        $response->bind(4, $ownerID);
+
+        $result	 = $response->execute();
+
+        return $result;
+	}
 }
 
 
@@ -143,6 +160,19 @@ $slim->get('/dieren', function()
 	$dieren 	 = $db->GetAllAnimals();
 	
 	print(json_encode($dieren));
+});
+
+$slim->post('/dieren', function()
+	use($slim, $db){
+		
+		$name		 = $app->request()->post('name');
+        $kind		 = $app->request()->post('kind');
+        $yearOfBirth = $app->request()->post('yearOfBirth');
+        $ownerID	 = $app->request()->post('ownerID');
+
+		$result		 = $db->AddAnimal($name, $kind, $yearOfBirth, $ownerID);
+
+		print(json_encode(array('result'=>$result)));
 });
 
 $slim->get('/dieren/:id', function($id)

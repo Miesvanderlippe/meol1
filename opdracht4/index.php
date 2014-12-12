@@ -109,6 +109,25 @@ class DB extends PDO {
 
         return $result;
 	}
+
+	public function GetAnimalsByOwner($where){
+
+		$query = 'SELECT `meol1_dieren`.`id`, `meol1_dieren`.`naam`,`meol1_dieren`.`soort`,`meol1_dieren`.`geboortejaar`, `meol1_dieren`.`eigenaar_id`, CONCAT(`meol1_eigenaars`.`voornaam`, \' \' ,if(`meol1_eigenaars`.`tussenvoegsel` IS NULL ,"",`meol1_eigenaars`.`tussenvoegsel` ), \' \' ,`meol1_eigenaars`.`achternaam`) AS `naam` FROM meol1_dieren LEFT JOIN `db71989`.`meol1_eigenaars` ON `meol1_dieren`.`eigenaar_id` = `meol1_eigenaars`.`id`';
+
+		//Quickhand if decides wether to filter on name or id based on if the input is numeric. 
+		$whereCondition = 'WHERE `meol1_dieren`.`eigenaar_id`=UNHEX(:where)';
+		$query = $query . $whereCondition;
+
+		$reponse = parent::prepare($query);
+		$where 	 = bin2hex($where);
+
+		$reponse->bindParam(':where', $where);
+
+        $reponse->execute();
+        $result	 = $reponse->fetchAll(PDO::FETCH_ASSOC);
+
+        return $result;
+	}
 }
 
 
@@ -153,6 +172,14 @@ $slim->get('/eigenaars/:id', function($id){
 	
 	$db 		 = new DB();
 	$eigenaar 	 = $db->GetOwner($id);
+	
+	print(json_encode($eigenaar));
+});
+
+$slim->get('/eigenaars/:id/dieren', function($id){
+	
+	$db 		 = new DB();
+	$eigenaar 	 = $db->GetAnimalsByOwner($id);
 	
 	print(json_encode($eigenaar));
 });

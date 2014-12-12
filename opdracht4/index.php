@@ -136,9 +136,9 @@ class DB extends PDO {
 
 		$reponse = parent::prepare($query);
 
-		$response->bind(1, $name));
-        $response->bind(2, $kind));
-        $response->bind(3, $yearOfBirth));
+		$response->bind(1, $name);
+        $response->bind(2, $kind);
+        $response->bind(3, $yearOfBirth);
         $response->bind(4, $ownerID);
 
         $result	 = $response->execute();
@@ -153,9 +153,9 @@ class DB extends PDO {
 
 		$reponse = parent::prepare($query);
 
-		$response->bind(1, $firstName));
-        $response->bind(2, $affix));
-        $response->bind(3, $lastName));
+		$response->bind(1, $firstName);
+        $response->bind(2, $affix);
+        $response->bind(3, $lastName);
         $response->bind(4, $city);
 
         $result	 = $response->execute();

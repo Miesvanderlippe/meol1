@@ -26,7 +26,7 @@ class DB extends PDO {
 
 	public function GetAllAnimals(){
 
-		$query = 'SELECT `id`, `naam` FROM `meol1_dieren`';
+		$query	 = 'SELECT `id`, `naam` FROM `meol1_dieren`';
 
         $reponse = parent::prepare($query);
         $reponse->execute();
@@ -37,12 +37,13 @@ class DB extends PDO {
 
 	public function GetAllOwners(){
 
-		$query = 'SELECT `id`, `voornaam`,`tussenvoegsel`,`achternaam`,`plaats` FROM `meol1_eigenaars`';
+		$query	 = 'SELECT `id`, `voornaam`,`tussenvoegsel`,`achternaam`,`plaats` FROM `meol1_eigenaars`';
 
         $reponse = parent::prepare($query);
         $reponse->execute();
-        $result	 = $reponse->fetchAll(PDO::FETCH_ASSOC);
 
+        $result	 = $reponse->fetchAll(PDO::FETCH_ASSOC);
+        
         return $result;
 	}
 
@@ -52,12 +53,12 @@ class DB extends PDO {
 
 		//Quickhand if decides wether to filter on name or id based on if the input is numeric. 
 		//Have an animal with a numeric name? Too bad. You could solve this if it weren't for a school excercise.
-		$whereCondition = 'WHERE ' . (is_numeric($where) ? 'id=UNHEX(:where)' : 'naam=UNHEX(:where)');
+		$whereCondition	 = 'WHERE ' . (is_numeric($where) ? 'id=UNHEX(:where)' : 'naam=UNHEX(:where)');
 
-		$query = $query . $whereCondition . ' LIMIT 1';
+		$query	 = $query . $whereCondition . ' LIMIT 1';
 
 		$reponse = parent::prepare($query);
-		$where = bin2hex($where);
+		$where 	 = bin2hex($where);
 
 		$reponse->bindParam(':where', $where);
 
@@ -69,16 +70,16 @@ class DB extends PDO {
 
 	public function GetOwner($where){
 
-		$query = 'SELECT `id`, `voornaam`,`tussenvoegsel`,`achternaam`,`plaats` FROM `meol1_eigenaars`';
+		$query	 = 'SELECT `id`, `voornaam`,`tussenvoegsel`,`achternaam`,`plaats` FROM `meol1_eigenaars`';
 
 		//Quickhand if decides wether to filter on name or id based on if the input is numeric. 
 		//Have an owner with a numeric name? Too bad. You could solve this if it weren't for a school excercise.
 		$whereCondition = 'WHERE ' . (is_numeric($where) ? 'id=UNHEX(:where)' : 'naam=UNHEX(:where)');
 
-		$query = $query . $whereCondition . ' LIMIT 1';
+		$query	 = $query . $whereCondition . ' LIMIT 1';
 
 		$reponse = parent::prepare($query);
-		$where = bin2hex($where);
+		$where 	 = bin2hex($where);
 
 		$reponse->bindParam(':where', $where);
 
@@ -90,16 +91,16 @@ class DB extends PDO {
 
 	public function GetOwnerByPet($where){
 
-		$query = 'SELECT `eigenaar_id` FROM `meol1_dieren` ';
+		$query	 = 'SELECT `eigenaar_id` FROM `meol1_dieren` ';
 
 		//Quickhand if decides wether to filter on name or id based on if the input is numeric. 
 		//Have an animal with a numeric name? Too bad. You could solve this if it weren't for a school excercise.
 		$whereCondition = 'WHERE ' . (is_numeric($where) ? 'id=UNHEX(:where)' : 'naam=UNHEX(:where)');
 
-		$query = $query . $whereCondition . ' LIMIT 1';
+		$query	 = $query . $whereCondition . ' LIMIT 1';
 
 		$reponse = parent::prepare($query);
-		$where = bin2hex($where);
+		$where 	 = bin2hex($where);
 
 		$reponse->bindParam(':where', $where);
 
@@ -118,24 +119,24 @@ $slim = new \Slim\Slim();
 
 $slim->get('/dieren', function(){
 
-	$db 	 = new DB();
-	$dieren  = $db->GetAllAnimals();
+	$db 		 = new DB();
+	$dieren 	 = $db->GetAllAnimals();
 	
 	print(json_encode($dieren));
 });
 
 $slim->get('/dieren/:id', function($id){
 	
-	$db 	 = new DB();
-	$dieren  = $db->GetAnimal($id);
+	$db 		 = new DB();
+	$dieren 	 = $db->GetAnimal($id);
 	
 	print(json_encode($dieren));
 });
 
 $slim->get('/dieren/:id/eigenaar', function($id){
 	
-	$db 	 = new DB();
-	$dieren  = $db->GetOwnerByPet($id);
+	$db 		 = new DB();
+	$dieren 	 = $db->GetOwnerByPet($id);
 	
 	print(json_encode($dieren));
 });

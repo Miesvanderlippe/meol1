@@ -1,5 +1,7 @@
 <?php
 
+require_once('classes/crypt.php');
+
 class DB extends PDO {
 
 	protected $dbname	 = 'db71989';
@@ -20,6 +22,23 @@ class DB extends PDO {
 		}
 
 		parent::__construct('mysql:host='. $this->dbserver . ';dbname=' . $this->dbname . ';port=' . $this->dbport, $this->dbuser, $this->dbpw, $options);
+	}
+
+	public function GenerateKeypair(){
+
+		$query = 	'INSERT INTO `meol1_keys`(public, private) VALUES (?, ?)';
+		
+		$response = parent::prepare($query);
+
+		$publicKey = Crypt::RandomString(16);
+		$privateKey = Crypt::RandomString(64);
+
+		$response->bindParam(1, $publicKey);
+        $response->bindParam(2, $privateKey);
+        
+        $result	 = $response->execute();
+
+        return $result;
 	}
 
 	public function GetPrivateKey($publicKey){

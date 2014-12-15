@@ -2,6 +2,7 @@
 
 require_once('../Slim/Slim.php');
 require_once('classes/database.php');
+require_once('classes/crypt.php');
 
 \Slim\Slim::registerAutoloader();
 
@@ -14,6 +15,16 @@ $slim->get('/dieren', function()
 	$dieren 	 = $db->GetAllAnimals();
 	
 	print(json_encode($dieren));
+});
+
+$slim->get('/generate', function()
+	use($slim, $db){
+		if(true){
+
+		$result 	 = $db->GenerateKeypair();
+		
+		print(json_encode($result));
+	}
 });
 
 $slim->post('/dieren', function()
@@ -81,5 +92,6 @@ $slim->get('/eigenaars/:id/dieren', function($id)
 	
 	print(json_encode($eigenaar));
 });
+
 
 $slim->run();

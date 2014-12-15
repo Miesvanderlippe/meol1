@@ -60,9 +60,9 @@ class DB extends PDO {
 
 		$query	 = 'SELECT `id`, `naam` FROM `meol1_dieren`';
 
-        $reponse = parent::prepare($query);
-        $reponse->execute();
-        $result	 = $reponse->fetchAll(PDO::FETCH_ASSOC);
+        $response = parent::prepare($query);
+        $response->execute();
+        $result	 = $response->fetchAll(PDO::FETCH_ASSOC);
 
         return $result;
 	}
@@ -71,10 +71,10 @@ class DB extends PDO {
 
 		$query	 = 'SELECT `id`, `voornaam`,`tussenvoegsel`,`achternaam`,`plaats` FROM `meol1_eigenaars`';
 
-        $reponse = parent::prepare($query);
-        $reponse->execute();
+        $response = parent::prepare($query);
+        $response->execute();
 
-        $result	 = $reponse->fetchAll(PDO::FETCH_ASSOC);
+        $result	 = $response->fetchAll(PDO::FETCH_ASSOC);
         
         return $result;
 	}
@@ -89,13 +89,13 @@ class DB extends PDO {
 
 		$query	 = $query . $whereCondition . ' LIMIT 1';
 
-		$reponse = parent::prepare($query);
+		$response = parent::prepare($query);
 		$where 	 = bin2hex($where);
 
-		$reponse->bindParam(':where', $where);
+		$response->bindParam(':where', $where);
 
-        $reponse->execute();
-        $result	 = $reponse->fetchAll(PDO::FETCH_ASSOC);
+        $response->execute();
+        $result	 = $response->fetchAll(PDO::FETCH_ASSOC);
 
         return $result;
 	}
@@ -110,13 +110,13 @@ class DB extends PDO {
 
 		$query	 = $query . $whereCondition . ' LIMIT 1';
 
-		$reponse = parent::prepare($query);
+		$response = parent::prepare($query);
 		$where 	 = bin2hex($where);
 
-		$reponse->bindParam(':where', $where);
+		$response->bindParam(':where', $where);
 
-        $reponse->execute();
-        $result	 = $reponse->fetchAll(PDO::FETCH_ASSOC);
+        $response->execute();
+        $result	 = $response->fetchAll(PDO::FETCH_ASSOC);
 
         return $result;
 	}
@@ -131,13 +131,13 @@ class DB extends PDO {
 
 		$query	 = $query . $whereCondition . ' LIMIT 1';
 
-		$reponse = parent::prepare($query);
+		$response = parent::prepare($query);
 		$where 	 = bin2hex($where);
 
-		$reponse->bindParam(':where', $where);
+		$response->bindParam(':where', $where);
 
-        $reponse->execute();
-        $result	 = $reponse->fetchAll(PDO::FETCH_ASSOC);
+        $response->execute();
+        $result	 = $response->fetchAll(PDO::FETCH_ASSOC);
 
         return $result;
 	}
@@ -150,13 +150,13 @@ class DB extends PDO {
 		$whereCondition = 'WHERE `meol1_dieren`.`eigenaar_id`=UNHEX(:where)';
 		$query = $query . $whereCondition;
 
-		$reponse = parent::prepare($query);
+		$response = parent::prepare($query);
 		$where 	 = bin2hex($where);
 
-		$reponse->bindParam(':where', $where);
+		$response->bindParam(':where', $where);
 
-        $reponse->execute();
-        $result	 = $reponse->fetchAll(PDO::FETCH_ASSOC);
+        $response->execute();
+        $result	 = $response->fetchAll(PDO::FETCH_ASSOC);
 
         return $result;
 	}
@@ -166,12 +166,12 @@ class DB extends PDO {
 		$query = 	'INSERT INTO `meol1_dieren`(naam, soort, geboortejaar, eigenaar_id)
 					 VALUES (?, ?, ?, ?)';
 
-		$reponse = parent::prepare($query);
+		$response = parent::prepare($query);
 
-		$response->bind(1, $name);
-        $response->bind(2, $kind);
-        $response->bind(3, $yearOfBirth);
-        $response->bind(4, $ownerID);
+		$response->bindParam(1, $name);
+        $response->bindParam(2, $kind);
+        $response->bindParam(3, $yearOfBirth);
+        $response->bindParam(4, $ownerID);
 
         $result	 = $response->execute();
 
@@ -183,12 +183,12 @@ class DB extends PDO {
 		$query = 	'INSERT INTO `meol1_eigenaars`(naam, soort, geboortejaar, eigenaar_id)
 					 VALUES (?, ?, ?, ?)';
 
-		$reponse = parent::prepare($query);
+		$response = parent::prepare($query);
 
-		$response->bind(1, $firstName);
-        $response->bind(2, $affix);
-        $response->bind(3, $lastName);
-        $response->bind(4, $city);
+		$response->bindParam(1, $firstName);
+        $response->bindParam(2, $affix);
+        $response->bindParam(3, $lastName);
+        $response->bindParam(4, $city);
 
         $result	 = $response->execute();
 

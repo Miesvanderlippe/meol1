@@ -27,6 +27,17 @@ $slim->get('/generate', function()
 	}
 });
 
+$slim->get('/test/:key', function($key)
+	use($slim, $db){
+		if(true){
+			$result = $db->GetPrivateKey($key);
+			print($result);
+		}
+	}
+);
+
+
+
 $slim->post('/dieren', function()
 	use($slim, $db){
 		

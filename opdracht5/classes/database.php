@@ -43,13 +43,17 @@ class DB extends PDO {
 
 	public function GetPrivateKey($publicKey){
 
-		$query	 = 'SELECT `id`, `private` FROM `meol1_keys`';
+		$query	 = 'SELECT `id`, `private` FROM `meol1_keys` WHERE `public`=?';
 
-        $reponse = parent::prepare($query);
-        $reponse->execute();
-        $result	 = $reponse->fetchAll(PDO::FETCH_ASSOC);
+        $response = parent::prepare($query);
+        $response->bindParam(1, $publicKey);
+        $response->execute();
+        $result	 = $response->fetchAll(PDO::FETCH_ASSOC);
 
-        return $result;
+        if(!isset($result[0]) || empty($result[0]))
+        	return false;
+
+        return $result[0]['private'];
 	}
 
 	public function GetAllAnimals(){

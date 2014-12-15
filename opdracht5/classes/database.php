@@ -22,6 +22,17 @@ class DB extends PDO {
 		parent::__construct('mysql:host='. $this->dbserver . ';dbname=' . $this->dbname . ';port=' . $this->dbport, $this->dbuser, $this->dbpw, $options);
 	}
 
+	public function GetPrivateKey($publicKey){
+
+		$query	 = 'SELECT `id`, `private` FROM `meol1_keys`';
+
+        $reponse = parent::prepare($query);
+        $reponse->execute();
+        $result	 = $reponse->fetchAll(PDO::FETCH_ASSOC);
+
+        return $result;
+	}
+
 	public function GetAllAnimals(){
 
 		$query	 = 'SELECT `id`, `naam` FROM `meol1_dieren`';

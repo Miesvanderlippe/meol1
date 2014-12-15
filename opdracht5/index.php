@@ -1,7 +1,7 @@
 <?php
 
 require_once('../Slim/Slim.php');
-require_once('database.php');
+require_once('classes/database.php');
 
 \Slim\Slim::registerAutoloader();
 

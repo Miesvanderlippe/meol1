@@ -9,13 +9,19 @@ require_once('classes/crypt.php');
 $slim 	 = new \Slim\Slim();
 $db 	 = new DB();
 
-$slim->get('/dieren', function()
+$slim->get('/dieren/:pub', function($pub)
 	use($db){
+		$publicKey  = $pub;
+		$privateKey = $db->GetPrivateKey($publicKey);
+		
+		if($privateKey === false)
+			$slim->notFound();
 
-	$dieren 	 = $db->GetAllAnimals();
-	
-	print(json_encode($dieren));
-});
+		$dieren 	 = $db->GetAllAnimals();
+		
+		print(json_encode($dieren));
+	}
+);
 
 $slim->get('/generate', function()
 	use($slim, $db){
@@ -38,71 +44,114 @@ $slim->get('/test/:key', function($key)
 
 
 
-$slim->post('/dieren', function()
+$slim->post('/dieren/:pub', function($pub)
 	use($slim, $db){
 		
-		$name		 = $app->request()->post('name');
-        $kind		 = $app->request()->post('kind');
-        $yearOfBirth = $app->request()->post('yearOfBirth');
-        $ownerID	 = $app->request()->post('ownerID');
+		$publicKey  = $pub;
+		$privateKey = $db->GetPrivateKey($publicKey);
+		
+		if($privateKey === false)
+			$slim->notFound();
+
+		$name		 = $slim->request()->post('name');
+        $kind		 = $slim->request()->post('kind');
+        $yearOfBirth = $slim->request()->post('yearOfBirth');
+        $ownerID	 = $slim->request()->post('ownerID');
 
 		$result		 = $db->AddAnimal($name, $kind, $yearOfBirth, $ownerID);
 
 		print(json_encode(array('result'=>$result)));
 });
 
-$slim->get('/dieren/:id', function($id)
+$slim->get('/dieren/:id/:pub', function($id, $pub)
 	use($db){
 
-	$dieren 	 = $db->GetAnimal($id);
-	
-	print(json_encode($dieren));
-});
-
-$slim->get('/dieren/:id/eigenaar', function($id)
-	use($db){
-
-	$dieren 	 = $db->GetOwnerByPet($id);
-	
-	print(json_encode($dieren));
-});
-
-$slim->get('/eigenaars', function()
-	use($db){
-
-	$eigenaars 	 = $db->GetAllOwners();
-	
-	print(json_encode($eigenaars));
-});
-
-$slim->post('/owners', function()
-	use($slim, $db){
+		$publicKey  = $pub;
+		$privateKey = $db->GetPrivateKey($publicKey);
 		
-		$firstName	 = $app->request()->post('firstName');
-        $affix		 = $app->request()->post('affix');
-        $lastName	 = $app->request()->post('lastName');
-        $city		 = $app->request()->post('city');
+		if($privateKey === false)
+			$slim->notFound();
+
+		$dieren 	 = $db->GetAnimal($id);
+		
+		print(json_encode($dieren));
+	}
+);
+
+$slim->get('/dieren/:id/eigenaar/:pub', function($id, $pub)
+	use($db){
+		$publicKey  = $pub;
+		$privateKey = $db->GetPrivateKey($publicKey);
+		
+		if($privateKey === false)
+			$slim->notFound();
+
+		$dieren 	 = $db->GetOwnerByPet($id);
+		
+		print(json_encode($dieren));
+	}
+);
+
+$slim->get('/eigenaars/:pub', function($pub)
+	use($db){
+		$publicKey  = $pub;
+		$privateKey = $db->GetPrivateKey($publicKey);
+		
+		if($privateKey === false)
+			$slim->notFound();
+
+		$eigenaars 	 = $db->GetAllOwners();
+		
+		print(json_encode($eigenaars));
+	}
+);
+
+$slim->post('/owners/:pub', function($pub)
+	use($slim, $db){
+
+		$publicKey  = $pub;
+		$privateKey = $db->GetPrivateKey($publicKey);
+		
+		if($privateKey === false)
+			$slim->notFound();
+		
+		$firstName	 = $slim->request()->post('firstName');
+        $affix		 = $slim->request()->post('affix');
+        $lastName	 = $slim->request()->post('lastName');
+        $city		 = $slim->request()->post('city');
 
 		$result		 = $db->AddOwner($firstName, $affix, $lastName, $city);
 
 		print(json_encode(array('result'=>$result)));
 });
 
-$slim->get('/eigenaars/:id', function($id)
+$slim->get('/eigenaars/:id/:pub', function($id, $pub)
 	use($db){
+		$publicKey  = $pub;
+		$privateKey = $db->GetPrivateKey($publicKey);
+		
+		if($privateKey === false)
+			$slim->notFound();
 
-	$eigenaar 	 = $db->GetOwner($id);
-	
-	print(json_encode($eigenaar));
-});
+		$eigenaar 	 = $db->GetOwner($id);
+		
+		print(json_encode($eigenaar));
+	}
+);
 
-$slim->get('/eigenaars/:id/dieren', function($id)
+$slim->get('/eigenaars/:id/dieren/:pub', function($id, $pub)
 	use($db){
-
-	$eigenaar 	 = $db->GetAnimalsByOwner($id);
-	
-	print(json_encode($eigenaar));
-});
+		
+		$publicKey  = $pub;
+		$privateKey = $db->GetPrivateKey($publicKey);
+		
+		if($privateKey === false)
+			$slim->notFound();
+		$eigenaar 	 = $db->GetAnimalsByOwner($id);
+		
+		print(json_encode($eigenaar));
+	}
+);
 
 
 $slim->run();

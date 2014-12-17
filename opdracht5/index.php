@@ -53,7 +53,7 @@ $slim->post('/dieren/:pub', function($pub)
 });
 
 $slim->get('/dieren/:id/:pub', function($id, $pub)
-	use($db){
+	use($slim, $db){
 
 		$publicKey  = $pub;
 		$hasPrivateKey = $db->HasPrivateKey($publicKey);
@@ -68,7 +68,7 @@ $slim->get('/dieren/:id/:pub', function($id, $pub)
 );
 
 $slim->get('/dieren/:id/eigenaar/:pub', function($id, $pub)
-	use($db){
+	use($slim, $db){
 		$publicKey  = $pub;
 		$hasPrivateKey = $db->HasPrivateKey($publicKey);
 		
@@ -82,7 +82,7 @@ $slim->get('/dieren/:id/eigenaar/:pub', function($id, $pub)
 );
 
 $slim->get('/eigenaars/:pub', function($pub)
-	use($db){
+	use($slim, $db){
 		$publicKey  = $pub;
 		$hasPrivateKey = $db->HasPrivateKey($publicKey);
 		
@@ -115,7 +115,7 @@ $slim->post('/owners/:pub', function($pub)
 });
 
 $slim->get('/eigenaars/:id/:pub', function($id, $pub)
-	use($db){
+	use($slim, $db){
 		$publicKey  = $pub;
 		$hasPrivateKey = $db->HasPrivateKey($publicKey);
 		
@@ -129,7 +129,7 @@ $slim->get('/eigenaars/:id/:pub', function($id, $pub)
 );
 
 $slim->get('/eigenaars/:id/dieren/:pub', function($id, $pub)
-	use($db){
+	use($slim, $db){
 		
 		$publicKey  = $pub;
 		$hasPrivateKey = $db->HasPrivateKey($publicKey);

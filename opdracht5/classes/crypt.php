@@ -15,4 +15,19 @@ class Crypt {
 	    
 	    return $randomString;
 	}
+
+	public static function MakeHash($key, $hashValues){
+
+		$hashValues  = json_encode($hashValues);
+		$hash 		 = hash_hmac('sha1', $data, $key);
+
+		return $hash;
+	}
+
+	public static function CheckHash($hash, $key, $hashValues){
+
+		$control = self::MakeHash($key, $hashValues);
+
+		return $hash == $control;
+	}
 }

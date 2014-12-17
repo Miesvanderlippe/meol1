@@ -30,10 +30,11 @@ class DB extends PDO {
 	public function CheckTimeStamp($timestamp){
 		
 		$maxTimeDiffMinutes = 5;
+		$maxTimeDiffSec = $maxTimeDiffMinutes * 60;
 
-		$time = (time() - $timestamp) / 60;
-
-	    return $time < $maxTimeDiffMinutes;
+		$timeDiff = (time() - $timestamp);
+		
+	    return $timeDiff < $maxTimeDiffSec;
 	}
 
 	public function GenerateKeypair(){

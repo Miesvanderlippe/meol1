@@ -19,7 +19,7 @@ class Crypt {
 	public static function MakeHash($key, $hashValues){
 
 		$hashValues  = json_encode($hashValues);
-		$hash 		 = hash_hmac('sha1', $data, $key);
+		$hash 		 = hash_hmac('sha1', $hashValues, $key);
 
 		return $hash;
 	}

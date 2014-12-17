@@ -10,11 +10,11 @@ $slim 	 = new \Slim\Slim();
 $db 	 = new DB();
 
 $slim->get('/dieren/:pub', function($pub)
-	use($db){
+	use($slim, $db){
 		$publicKey  = $pub;
-		$privateKey = $db->GetPrivateKey($publicKey);
+		$hasPrivateKey = $db->HasPrivateKey($publicKey);
 		
-		if($privateKey === false)
+		if(!$hasPrivateKey)
 			$slim->notFound();
 
 		$dieren 	 = $db->GetAllAnimals();
@@ -33,24 +33,13 @@ $slim->get('/generate', function()
 	}
 });
 
-$slim->get('/test/:key', function($key)
-	use($slim, $db){
-		if(true){
-			$result = $db->GetPrivateKey($key);
-			print($result);
-		}
-	}
-);
-
-
-
 $slim->post('/dieren/:pub', function($pub)
 	use($slim, $db){
 		
 		$publicKey  = $pub;
-		$privateKey = $db->GetPrivateKey($publicKey);
+		$hasPrivateKey = $db->HasPrivateKey($publicKey);
 		
-		if($privateKey === false)
+		if(!$hasPrivateKey)
 			$slim->notFound();
 
 		$name		 = $slim->request()->post('name');
@@ -67,9 +56,9 @@ $slim->get('/dieren/:id/:pub', function($id, $pub)
 	use($db){
 
 		$publicKey  = $pub;
-		$privateKey = $db->GetPrivateKey($publicKey);
+		$hasPrivateKey = $db->HasPrivateKey($publicKey);
 		
-		if($privateKey === false)
+		if(!$hasPrivateKey)
 			$slim->notFound();
 
 		$dieren 	 = $db->GetAnimal($id);
@@ -81,9 +70,9 @@ $slim->get('/dieren/:id/:pub', function($id, $pub)
 $slim->get('/dieren/:id/eigenaar/:pub', function($id, $pub)
 	use($db){
 		$publicKey  = $pub;
-		$privateKey = $db->GetPrivateKey($publicKey);
+		$hasPrivateKey = $db->HasPrivateKey($publicKey);
 		
-		if($privateKey === false)
+		if(!$hasPrivateKey)
 			$slim->notFound();
 
 		$dieren 	 = $db->GetOwnerByPet($id);
@@ -95,9 +84,9 @@ $slim->get('/dieren/:id/eigenaar/:pub', function($id, $pub)
 $slim->get('/eigenaars/:pub', function($pub)
 	use($db){
 		$publicKey  = $pub;
-		$privateKey = $db->GetPrivateKey($publicKey);
+		$hasPrivateKey = $db->HasPrivateKey($publicKey);
 		
-		if($privateKey === false)
+		if(!$hasPrivateKey)
 			$slim->notFound();
 
 		$eigenaars 	 = $db->GetAllOwners();
@@ -110,9 +99,9 @@ $slim->post('/owners/:pub', function($pub)
 	use($slim, $db){
 
 		$publicKey  = $pub;
-		$privateKey = $db->GetPrivateKey($publicKey);
+		$hasPrivateKey = $db->HasPrivateKey($publicKey);
 		
-		if($privateKey === false)
+		if(!$hasPrivateKey)
 			$slim->notFound();
 		
 		$firstName	 = $slim->request()->post('firstName');
@@ -128,9 +117,9 @@ $slim->post('/owners/:pub', function($pub)
 $slim->get('/eigenaars/:id/:pub', function($id, $pub)
 	use($db){
 		$publicKey  = $pub;
-		$privateKey = $db->GetPrivateKey($publicKey);
+		$hasPrivateKey = $db->HasPrivateKey($publicKey);
 		
-		if($privateKey === false)
+		if(!$hasPrivateKey)
 			$slim->notFound();
 
 		$eigenaar 	 = $db->GetOwner($id);
@@ -143,9 +132,9 @@ $slim->get('/eigenaars/:id/dieren/:pub', function($id, $pub)
 	use($db){
 		
 		$publicKey  = $pub;
-		$privateKey = $db->GetPrivateKey($publicKey);
+		$hasPrivateKey = $db->HasPrivateKey($publicKey);
 		
-		if($privateKey === false)
+		if(!$hasPrivateKey)
 			$slim->notFound();
 		$eigenaar 	 = $db->GetAnimalsByOwner($id);
 		

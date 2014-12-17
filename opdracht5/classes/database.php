@@ -41,7 +41,7 @@ class DB extends PDO {
         return $result;
 	}
 
-	public function GetPrivateKey($publicKey){
+	private function GetPrivateKey($publicKey){
 
 		$query	 = 'SELECT `id`, `private` FROM `meol1_keys` WHERE `public`=?';
 
@@ -54,6 +54,13 @@ class DB extends PDO {
         	return false;
 
         return $result[0]['private'];
+	}
+
+	public function HasPrivateKey($publicKey){
+
+		$key = self::GetPrivateKey($publicKey);
+
+        return $key !== false;
 	}
 
 	public function GetAllAnimals(){

@@ -33,8 +33,16 @@ class DB extends PDO {
 		$maxTimeDiffSec = $maxTimeDiffMinutes * 60;
 
 		$timeDiff = (time() - $timestamp);
-		
+
 	    return $timeDiff < $maxTimeDiffSec;
+	}
+
+	public function CheckHash($pubKey, $hash, $hashVariables){
+
+		$privateKey 	 = $this->GetPrivateKey($pubKey);
+		$result 		 = Crypt::CheckHash($hash, $privateKey, $hashVariables);
+
+		return $result;
 	}
 
 	public function GenerateKeypair(){

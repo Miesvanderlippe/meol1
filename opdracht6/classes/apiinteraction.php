@@ -29,7 +29,8 @@ class APIInteraction {
 
         $time        = time(); //Just in case hashing takes more than a second.
 
-        $variables['timestamp'] = $time;
+        $variables['timestamp'] = strval($time);
+
         $hash        = Crypt::MakeHash(self::$privateKey, $variables);
 
         $URLSuffix   = '/'.self::$publicKey .'/'. $time .'/'. $hash;

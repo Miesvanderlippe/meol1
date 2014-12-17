@@ -24,6 +24,15 @@ class DB extends PDO {
 		parent::__construct('mysql:host='. $this->dbserver . ';dbname=' . $this->dbname . ';port=' . $this->dbport, $this->dbuser, $this->dbpw, $options);
 	}
 
+	public function CheckTimeStamp($timestamp){
+		
+		$maxTimeDiffMinutes = 5;
+
+		$time = (time() - $timestamp) / 60;
+
+	    return $time < $maxTimeDiffMinutes;
+	}
+
 	public function GenerateKeypair(){
 
 		$query = 	'INSERT INTO `meol1_keys`(public, private) VALUES (?, ?)';

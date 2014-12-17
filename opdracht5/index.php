@@ -9,8 +9,12 @@ require_once('classes/crypt.php');
 $slim 	 = new \Slim\Slim();
 $db 	 = new DB();
 
-$slim->get('/dieren/:pub', function($pub)
+$slim->get('/dieren/:pub/:time', function($pub, $time)
 	use($slim, $db){
+		
+		if(!$db->CheckTimeStamp($time))
+			$slim->notFound();
+
 		$publicKey  = $pub;
 		$hasPrivateKey = $db->HasPrivateKey($publicKey);
 		
@@ -33,9 +37,12 @@ $slim->get('/generate', function()
 	}
 });
 
-$slim->post('/dieren/:pub', function($pub)
+$slim->post('/dieren/:pub/:time', function($pub, $time)
 	use($slim, $db){
 		
+		if(!$db->CheckTimeStamp($time))
+			$slim->notFound();
+
 		$publicKey  = $pub;
 		$hasPrivateKey = $db->HasPrivateKey($publicKey);
 		
@@ -52,8 +59,11 @@ $slim->post('/dieren/:pub', function($pub)
 		print(json_encode(array('result'=>$result)));
 });
 
-$slim->get('/dieren/:id/:pub', function($id, $pub)
+$slim->get('/dieren/:id/:pub/:time', function($id, $pub, $time)
 	use($slim, $db){
+
+		if(!$db->CheckTimeStamp($time))
+			$slim->notFound();
 
 		$publicKey  = $pub;
 		$hasPrivateKey = $db->HasPrivateKey($publicKey);
@@ -67,8 +77,12 @@ $slim->get('/dieren/:id/:pub', function($id, $pub)
 	}
 );
 
-$slim->get('/dieren/:id/eigenaar/:pub', function($id, $pub)
+$slim->get('/dieren/:id/eigenaar/:pub/:time', function($id, $pub, $time)
 	use($slim, $db){
+		
+		if(!$db->CheckTimeStamp($time))
+			$slim->notFound();
+
 		$publicKey  = $pub;
 		$hasPrivateKey = $db->HasPrivateKey($publicKey);
 		
@@ -81,8 +95,12 @@ $slim->get('/dieren/:id/eigenaar/:pub', function($id, $pub)
 	}
 );
 
-$slim->get('/eigenaars/:pub', function($pub)
+$slim->get('/eigenaars/:pub/:time', function($pub, $time)
 	use($slim, $db){
+
+		if(!$db->CheckTimeStamp($time))
+			$slim->notFound();
+
 		$publicKey  = $pub;
 		$hasPrivateKey = $db->HasPrivateKey($publicKey);
 		
@@ -95,8 +113,11 @@ $slim->get('/eigenaars/:pub', function($pub)
 	}
 );
 
-$slim->post('/owners/:pub', function($pub)
+$slim->post('/owners/:pub/:time', function($pub, $time)
 	use($slim, $db){
+
+		if(!$db->CheckTimeStamp($time))
+			$slim->notFound();
 
 		$publicKey  = $pub;
 		$hasPrivateKey = $db->HasPrivateKey($publicKey);
@@ -114,8 +135,12 @@ $slim->post('/owners/:pub', function($pub)
 		print(json_encode(array('result'=>$result)));
 });
 
-$slim->get('/eigenaars/:id/:pub', function($id, $pub)
+$slim->get('/eigenaars/:id/:pub/:time', function($id, $pub, $time)
 	use($slim, $db){
+		
+		if(!$db->CheckTimeStamp($time))
+					$slim->notFound();
+
 		$publicKey  = $pub;
 		$hasPrivateKey = $db->HasPrivateKey($publicKey);
 		
@@ -128,9 +153,12 @@ $slim->get('/eigenaars/:id/:pub', function($id, $pub)
 	}
 );
 
-$slim->get('/eigenaars/:id/dieren/:pub', function($id, $pub)
+$slim->get('/eigenaars/:id/dieren/:pub/:time', function($id, $pub, $time)
 	use($slim, $db){
 		
+		if(!$db->CheckTimeStamp($time))
+			$slim->notFound();
+
 		$publicKey  = $pub;
 		$hasPrivateKey = $db->HasPrivateKey($publicKey);
 		

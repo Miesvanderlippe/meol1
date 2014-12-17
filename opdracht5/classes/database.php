@@ -10,6 +10,9 @@ class DB extends PDO {
 	protected $dbport	 = '3307';
 	protected $dbserver  = 'localhost';
 
+	protected $privateKey;
+	protected $publicKey;
+
 	public function __construct($options = Null){
 		
 		if(!isset($options)) {
@@ -51,6 +54,9 @@ class DB extends PDO {
 	}
 
 	private function GetPrivateKey($publicKey){
+		
+		if($publicKey == $this->publicKey)
+			return $this->privateKey;
 
 		$query	 = 'SELECT `id`, `private` FROM `meol1_keys` WHERE `public`=?';
 
@@ -62,7 +68,12 @@ class DB extends PDO {
         if(!isset($result[0]) || empty($result[0]))
         	return false;
 
-        return $result[0]['private'];
+        $privateKey = $result[0]['private'];
+        
+        $this->privateKey = $privateKey;
+        $this->publicKey  = $publicKey;
+
+        return $privateKey;
 	}
 
 	public function HasPrivateKey($publicKey){
